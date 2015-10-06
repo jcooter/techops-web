@@ -7,7 +7,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "techops_web",
+        "NAME": "postgres",
         "USER": "",
         "PASSWORD": "",
         "HOST": "localhost",
@@ -15,4 +15,3 @@ DATABASES = {
     }
 }
 
-INSTALLED_APPS += ("debug_toolbar", )

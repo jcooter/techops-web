@@ -1,3 +1,9 @@
 *.pyc
 .*swp
+*.tar.gz
 db.sqlite3
+virtualenv
+static
+*.key
+*.crt
+*.pem

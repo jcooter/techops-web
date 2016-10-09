@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}TechOps{% endblock title %}
+
+{% block content %}
+<div class="row" style="margin-top: 10px">
+    <div class="large-4 columns">
+        <div style="padding: 20px;">
+            <img src="{% static "img/techops.png" %}" />
+        </div>
+        <div class="panel callout">
+            <h3 class="text-center">Department Head On-Call</h3>
+            <div class="row">
+                <div class="large-4 columns">
+                    <img src="https://s.gravatar.com/avatar/3ac9b11763123f9522085b044792cf40?s=140" />
+                </div>
+                <div class="large-8 columns">
+                    <h3>Joe Cooter</h3>
+                    <p style="font-size: x-large !important; margin: 0;">Slack: @nikgod</p>
+                    <p style="font-size: x-large !important; margin: 0;">Cell: 571-294-0683</p>
+                </div>
+            </div>
+        </div>
+        <div class="panel callout">
+            <h3 class="text-center">Desk Manager</h3>
+            <div class="row">
+                <div class="large-4 columns">
+                    <img src="https://s.gravatar.com/avatar/3ac9b11763123f9522085b044792cf40?s=140" />
+                </div>
+                <div class="large-8 columns">
+                    <h3>Joe Cooter</h3>
+                    <p style="font-size: x-large !important; margin: 0;">Slack: @nikgod</p>
+                    <p style="font-size: x-large !important; margin: 0;">Cell: 571-294-0683</p>
+                </div>
+            </div>
+        </div>
+        <div class="panel callout">
+            <h3 class="text-center">Desk Manager</h3>
+            <div class="row">
+                <div class="large-4 columns">
+                    <img src="https://s.gravatar.com/avatar/3ac9b11763123f9522085b044792cf40?s=140" />
+                </div>
+                <div class="large-8 columns">
+                    <h3>Joe Cooter</h3>
+                    <p style="font-size: x-large !important; margin: 0;">Slack: @nikgod</p>
+                    <p style="font-size: x-large !important; margin: 0;">Cell: 571-294-0683</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="large-8 columns text-center" style="font-size: 200%">
+        <div class="panel callout">
+            <img src="{% static "img/netstat.png" %}" />
+        </div>
+        <div class="row">
+            <div class="large-3 columns">
+                <div class="panel callout">
+                    <h1>13</h1>
+                    <span>Radios Available for Check-Out</span>
+                </div>
+            </div>
+            <div class="large-3 columns">
+                <div class="panel callout">
+                    <h1>156</h1>
+                    <span>Active DHCP Leases</span>
+                </div>
+            </div>
+            <div class="large-3 columns">
+                <div class="panel callout">
+                    <h1>37</h1>
+                    <span>On-Shift TechOps Staffers</span>
+                </div>
+            </div>
+            <div class="large-3 columns">
+                <div class="panel callout">
+                    <h1>67</h1>
+                    <span>Gaff Rolls Remaining</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-3 columns">
+                <div class="panel callout">
+                    <h1>9000</h1>
+                    <span>Twitch Stream Viewers</span>
+                </div>
+            </div>
+            <div class="large-3 columns">
+                <div class="panel callout">
+                    <h1>15746</h1>
+                    <span>Attendees Checked-In</span>
+                </div>
+            </div>
+            <div class="large-3 columns">
+                <div class="panel callout">
+                    <h1>20000</h1>
+                    <span>Attendees Registered</span>
+                </div>
+            </div>
+            <div class="large-3 columns">
+                <div class="panel callout">
+                    <h1>5</h1>
+                    <span>Gooooooolden Rings</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-12 columns">
+                <h1>Remember: TechOps is Best Ops&trade;</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" style="text-align: center">
+
+
+</div>
+{% endblock content %}
+
+{% block body_js %}
+<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.0.0/moment.min.js"></script>
+<script>
+    $(function(){
+
+	    // Cache some selectors
+
+	    var clock = $('#clock'),
+	    	alarm = clock.find('.alarm'),
+    		ampm = clock.find('.ampm');
+
+	    // Map digits to their names (this will be an array)
+	    var digit_to_name = 'zero one two three four five six seven eight nine'.split(' ');
+
+    	// This object will hold the digit elements
+	    var digits = {};
+
+    	// Positions for the hours, minutes, and seconds
+	    var positions = [
+		    'h1', 'h2', ':', 'm1', 'm2', ':', 's1', 's2'
+    	];
+
+	    // Generate the digits with the needed markup,
+	    // and add them to the clock
+
+	    var digit_holder = clock.find('.digits');
+
+	    $.each(positions, function(){
+
+		    if(this == ':'){
+		    	digit_holder.append('<div class="dots">');
+	    	}
+	    	else{
+
+	    		var pos = $('<div>');
+
+    			for(var i=1; i<8; i++){
+    				pos.append('<span class="d' + i + '">');
+    			}
+
+    			// Set the digits as key:value pairs in the digits object
+    			digits[this] = pos;
+
+    			// Add the digit elements to the page
+    			digit_holder.append(pos);
+    		}
+
+    	});
+
+
+
+	    // Run a timer every second and update the clock
+
+	    (function update_time(){
+
+	    	// Use moment.js to output the current time as a string
+	    	// hh is for the hours in 12-hour format,
+	    	// mm - minutes, ss-seconds (all with leading zeroes),
+    		// d is for day of week and A is for AM/PM
+
+	    	var now = moment().format("hhmmssA");
+
+    		digits.h1.attr('class', digit_to_name[now[0]]);
+    		digits.h2.attr('class', digit_to_name[now[1]]);
+    		digits.m1.attr('class', digit_to_name[now[2]]);
+    		digits.m2.attr('class', digit_to_name[now[3]]);
+    		digits.s1.attr('class', digit_to_name[now[4]]);
+    		digits.s2.attr('class', digit_to_name[now[5]]);
+
+    		// Set the am/pm text:
+    		ampm.text(now[6]+now[7]);
+
+    		// Schedule this function to be run again in 1 sec
+    		setTimeout(update_time, 1000);
+
+    	})();
+    });
+</script>
+{% endblock body_js %}
+
+{% block top_bar %}
+            <div id="clock" class="light">
+              <div class="display">
+                 <div class="ampm"></div>
+                  <div class="digits"></div>
+              </div>
+            </div>
+{% endblock top_bar %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/clock.css" %}">
+{% endblock css %}
+
+{% block footer %}{% endblock footer %}

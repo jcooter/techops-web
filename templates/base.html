@@ -1,0 +1,155 @@
+{% load staticfiles %}
+{% load sitetree %}
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% block meta %}{% endblock meta %}
+    {% block base_title %}
+    <title>{% block title %}Foundation 5.5.0{% endblock title %}</title>
+    {% endblock base_title %}
+
+    {# Base Foundation CSS #}
+    {% block foundation_css %}
+    <link href="{% static "foundation/css/normalize.css" %}" rel="stylesheet"/>
+    <link href="{% static "foundation/css/foundation.css" %}" rel="stylesheet"/>
+    {% endblock foundation_css %}
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="{% static "css/dashboard.css" %}">
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+    <link rel="stylesheet" href="{% static "css/dripicon.css" %}">
+    <link rel="stylesheet" href="{% static "css/typicons.css" %}" />
+    <link rel="stylesheet" href="{% static "css/font-awesome.css" %}" />
+    <link rel="stylesheet" href="{% static "sass/css/theme.css" %}">
+    {# Custom CSS #}
+    {% block css %}
+
+    {% endblock css %}
+
+    {# Override if you need another version of modernizr #}
+    {% block foundation_modernizer %}
+    <script src="{% static "foundation/js/vendor/modernizr.js" %}"></script>
+    {% endblock foundation_modernizer %}
+
+    <script src="{% static "js/pace/pace.js" %}"></script>
+    <link href="{% static "js/pace/themes/orange/pace-theme-flash.css" %}" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static "js/slicknav/slicknav.css" %}" />
+    {# Custom head JS #}
+    {% block head_js %}
+
+    {% endblock head_js %}
+
+</head>
+
+<body {% block body_attr %}{% endblock body_attr %}>
+    <!-- preloader -->
+    <div id="preloader">
+        <div id="status">{% block preloader_status %}&nbsp;{% endblock preloader_status %}</div>
+    </div>
+    <!-- End of preloader -->
+
+    <div class="off-canvas-wrap" data-offcanvas>
+        <!-- right sidebar wrapper -->
+        <div class="inner-wrap">
+
+
+            <!-- Right sidemenu -->
+            <div id="skin-select">
+
+                <a id="toggle">
+                    <span class="fa icon-menu"></span>
+                </a>
+
+                <div class="skin-part">
+                    <div id="tree-wrap">
+
+                        <div class="profile">
+                            <img alt="" class="" src="{% static "img/logo.png" %}">
+                            <h3>{% block app_name %}TechOps{% endblock app_name %}<small>{% block app_version %}0.1a{% endblock app_version %}</small></h3>
+
+                        </div>
+
+                        <div class="side-bar">
+                            {% sitetree_menu from "appnav" include "trunk" %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end of Rightsidemenu -->
+
+
+
+            <div class="wrap-fluid" id="paper-bg">
+                <!-- top nav -->
+                <div class="top-bar-nest">
+                    {% block top_bar %}{% endblock %}
+                </div>
+                <!-- end of top nav -->
+
+                {% block breadcrumb %}
+                <!-- breadcrumbs -->
+                <!-- end of breadcrumbs -->
+                {% endblock breadcrumb %}
+
+                <!-- Container Begin -->
+                {% block content %}{% endblock content %}
+                {% block footer %}
+                <footer>
+                    <div id="footer">Copyright &copy; 2015 <a href="http://themeforest.net/user/matirasa">Matirasa</a> Made with <i class="fontello-heart-1 text-green"></i></div>
+                </footer>
+                {% endblock footer %}
+            </div>
+            <!-- End of Container Begin -->
+        </div>
+        <!-- end paper bg -->
+    </div>
+    <!-- end of off-canvas-wrap -->
+
+    <!-- end of inner-wrap -->
+
+
+
+    <!-- main javascript library -->
+    {# Override if you need another version of jQuery #}
+    {% block foundation_jquery %}
+    <script src="{% static "js/jquery.js" %}"></script>
+    {% endblock foundation_jquery %}
+
+    {# Foundation JS #}
+    {% block foundation_js %}
+    <script src="{% static "foundation/js/foundation.min.js" %}"></script>
+    {% endblock foundation_js %}
+
+    {# Template JS #}
+    {% block template_js %}
+    <script type="text/javascript" src="{% static "js/waypoints.min.js" %}"></script>
+    <script type='text/javascript' src="{% static "js/preloader-script.js" %}"></script>
+    <!-- main edumix javascript -->
+    <script type='text/javascript' src="{% static "js/slimscroll/jquery.slimscroll.js" %}"></script>
+    <script type='text/javascript' src="{% static "js/slicknav/jquery.slicknav.js" %}"></script>
+    <script type='text/javascript' src="{% static "js/sliding-menu.js" %}"></script>
+    <script type='text/javascript' src="{% static "js/scriptbreaker-multiple-accordion-1.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/number/jquery.counterup.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/circle-progress/jquery.circliful.js" %}"></script>
+    <script type='text/javascript' src="{% static "js/app.js" %}"></script>
+    <!-- additional javascript -->
+    <script type='text/javascript' src="{% static "js/number-progress-bar/jquery.velocity.min.js" %}"></script>
+    <script type='text/javascript' src="{% static "js/number-progress-bar/number-pb.js" %}"></script>
+    <script type='text/javascript' src="{% static "js/loader/loader.js" %}"></script>
+    <script type='text/javascript' src="{% static "js/loader/demo.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/skycons/skycons.js" %}"></script>
+    {% endblock template_js %}
+
+    {# Custom JS #}
+    {% block body_js %}{% endblock body_js %}
+
+    {# Init Foundation #}
+    {% block foundation_js_init %}
+    <script>
+        $(document).foundation();
+    </script>
+    {% endblock foundation_js_init %}
+</body>
+</html>

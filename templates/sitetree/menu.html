@@ -1,0 +1,11 @@
+{% load sitetree %}
+<ul id="menu-showhide" class="topnav slicknav">
+    {% for item in sitetree_items %}
+    <li>
+        <a {% if item.is_current or item.in_current_branch %}id="menu-select"{% endif %} class="tooltip-tip" href="{% sitetree_url for item %}" {% if item.hint %}title="{{ item.hint }}"{% endif %}>
+            {%  if item.description %}<i class="{{ item.description }}"></i>{% endif %}
+            <span>{{ item.title_resolved }}</span>
+        </a>
+    </li>
+    {%  endfor %}
+</ul>

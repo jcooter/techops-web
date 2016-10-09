@@ -1,5 +1,18 @@
 from django.db import models
 
+FEEDBACK_CHOICE = (
+    ('very_poor', 'really sucks'),
+    ('poor', 'sucks'),
+    ('neutral', 'ain\'t bad'),
+    ('good','is awesome'),
+    ('very_good','is really awesome')
+)
+
+NETWORK_TYPE_CHOICE = (
+    ('wifi', 'WiFi'),
+    ('wired', 'Wired (Ethernet)'),
+    ('both', 'Both')
+)
 # Create your models here.
 class RequirementsSubmission(models.Model):
     # Contact Info
@@ -28,7 +41,7 @@ class RequirementsSubmission(models.Model):
 
     # Network Request
     create_network_request = models.BooleanField(default=False, verbose_name='Requires Network')
-    network_type = models.CharField(max_length=24, blank=True, verbose_name='Connection Type')
+    network_type = models.CharField(max_length=24, blank=True, verbose_name='Connection Type', choices=NETWORK_TYPE_CHOICE)
     num_wired_drops = models.PositiveSmallIntegerField(blank=True, null=True, default=0, verbose_name='Wired Drop Count')
     wired_drops_location = models.CharField(max_length=64, blank=True, null=True, verbose_name='Wired Drop Location')
     num_wireless_users = models.PositiveSmallIntegerField(blank=True, null=True, default=0, verbose_name='Wireless User Count')
@@ -69,5 +82,5 @@ class RequirementsSubmission(models.Model):
     other_tape_requirements = models.TextField(blank=True, verbose_name='Other Tape Requests')
 
     other_request = models.TextField(blank=True, verbose_name='Other Requests')
-    feedback_rating = models.CharField(max_length=24, blank=True, verbose_name='Feedback Rating')
+    feedback_rating = models.CharField(max_length=24, blank=True, verbose_name='Feedback Rating',choices=FEEDBACK_CHOICE)
     feedback_comments = models.TextField(blank=True, verbose_name='Comments')

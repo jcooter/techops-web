@@ -1,14 +1,134 @@
 from django import forms
+from django.forms import RadioSelect
+from django.forms.widgets import RadioFieldRenderer
+from django.utils.encoding import force_text
+from django.utils.html import format_html
+from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext_lazy as _
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, HTML, Fieldset
 from crispy_forms_foundation.layout import TabHolder, TabItem, Row, Column, SwitchField, InlineSwitchField
 
 from .models import RequirementsSubmission
 
+YES_NO_CHOICE = (
+    ( True, _('Yes')),
+    ( False, _('No'))
+)
+
+class FieldsetRadioFieldRenderer(RadioFieldRenderer):
+    outer_html = '{content}'
+    inner_html = '<div class="holder">{choice_value}{sub_widgets}</div>'
+
+class InlineRadioFieldRenderer(RadioFieldRenderer):
+    outer_html = '<div class="row"{id_attr}>{content}</div>'
+    inner_html = '<div class="large-{size} columns end">{choice_value}{sub_widgets}</div>'
+
+    def render(self):
+        id_ = self.attrs.get('id')
+        output = []
+        size = 12 / len(self.choices)
+        for i, choice in enumerate(self.choices):
+            choice_value, choice_label = choice
+            if isinstance(choice_label, (tuple, list)):
+                attrs_plus = self.attrs.copy()
+                if id_:
+                    attrs_plus['id'] += '_{}'.format(i)
+                sub_ul_renderer = self.__class__(
+                    name=self.name,
+                    value=self.value,
+                    attrs=attrs_plus,
+                    choices=choice_label
+                )
+                sub_ul_renderer.choice_input_class = self.choice_input_class
+                output.append(format_html(
+                    self.inner_html, choice_value=choice_value,
+                    size=size, sub_widgets=sub_ul_renderer.render(),
+                ))
+            else:
+                w = self.choice_input_class(self.name, self.value, self.attrs.copy(), choice, i)
+                output.append(format_html(self.inner_html, choice_value=force_text(w), size=size, sub_widgets=''))
+        return format_html(
+            self.outer_html,
+            id_attr=format_html(' id="{}"', id_) if id_ else '',
+            content=mark_safe('\n'.join(output)),
+        )
+
 class RequirementsForm(forms.ModelForm):
     class Meta:
         model = RequirementsSubmission
         exclude = []
+        widgets = {
+            'need_custom_software': RadioSelect(
+                choices=YES_NO_CHOICE,
+                renderer=InlineRadioFieldRenderer),
+            'feedback_rating': RadioSelect(renderer=FieldsetRadioFieldRenderer),
+            'network_type': RadioSelect(renderer=InlineRadioFieldRenderer)
+        }
+        labels = {
+            'create_av_request': _('Our department needs A/V Equipment'),
+
+            'need_pa': _('PA Systems / Speakers'),
+            'need_wired_mic': _('Wired Microphones'),
+            'need_wireless_mic': _('Wireless Microphones'),
+            'need_laptop_input': _('Laptop / Phone Inputs'),
+            'need_other_audio': _('Other'),
+
+            'need_projector': _('Projectors'),
+            'need_projection_screen': _('Projection Screens'),
+            'need_lcd_monitor': _('LCD Computer Monitors'),
+            'need_tv': _('Televisions'),
+            'need_dvd_player': _('DVD/Blu-ray Players'),
+            'need_other_video': _('Other'),
+
+            'av_details': _('Details'),
+
+            'need_lighting': _('Our department needs Lighting Equipment'),
+            'lighting_details': _('Details'),
+
+            'create_network_request': _('Our department needs Network access'),
+            'network_type': _('What type of network connection do you need?'),
+            'num_wired_drops': _('Approximately how many wired drops do you need?'),
+            'wired_drops_location': _('What room(s) do you need wired drops in?'),
+            'num_wireless_users': _('Approximately how many users will need wireless access?'),
+            'other_net_requirements': _('Other requirements?'),
+
+            'create_laptop_request': _('Our department needs laptops'),
+            'num_laptops': _('How many laptops do you need?'),
+
+            'need_internet_access': _('Access the Internet'),
+            'need_uber_access': _('Access Uber/RAMS'),
+            'need_digital_signage': _('Run digital signage'),
+            'need_other_laptops': _('Other'),
+
+            'need_custom_software': _('I need to install software on our laptops'),
+            'other_laptop_requirements': _('Other requirements?'),
+
+            'create_power_request': _('Our department needs extension cords, power strips, etc.'),
+            'num_power_strips': _('How many power strips do you need?'),
+            'num_25ft_cords': _('How many 25 foot extension cords do you need?'),
+            'num_50ft_cords': _('How many 50 foot extension cords do you need?'),
+            'other_power_requirements': _('Other requirements?'),
+
+            'create_phone_request': _('Our department needs IP Phones'),
+            'num_phones': _('How many phones?'),
+            'phone_location': _('Which room(s) do you need these phones?'),
+            'other_phone_requirements': _('Special Requirements?'),
+
+            'create_radio_request': _('Our department needs radios'),
+            'num_radios': _('How many radios?'),
+            'num_headsets': _('How many headsets?'),
+            'other_radio_requirements': _('Special Requirements?'),
+
+            'create_tape_request': _('Our department needs gaff tape'),
+            'num_rolls': _('How many rolls?'),
+            'other_tape_requirements': _('Special Requirements'),
+
+            'other_request': _(''),
+
+            'feedback_rating': _(''),
+            'feedback_comments': _('Comments / Suggestions')
+        }
 
     def __init__(self, *args, **kwargs):
         super(RequirementsForm, self).__init__(*args, **kwargs)
@@ -18,6 +138,8 @@ class RequirementsForm(forms.ModelForm):
         self.helper.form_method = 'post'
         self.helper.form_action = 'submit_requirements'
         self.helper.add_input(Submit('submit', 'Submit'))
+        self.fields['feedback_rating'].choices = self.fields['feedback_rating'].choices[1:]
+        self.fields['network_type'].choices = self.fields['network_type'].choices[1:]
         self.helper.layout = Layout(
             TabHolder(
                 TabItem('General Info',
@@ -67,22 +189,22 @@ class RequirementsForm(forms.ModelForm):
                                 'need_other_video',
                             ),
 
-                        css_class='large-4'),
+                        css_class='large-6'),
                     ),
                     Row(
                         Column(
                             'av_details',
-                        css_class='large-6')
+                        css_class='large-8')
                     ),
                     Row(
                         Column(
                             InlineSwitchField('need_lighting'),
-                        css_class='large-4')
+                        css_class='large-6')
                     ),
                     Row(
                         Column(
                             'lighting_details',
-                        css_class='large-6')
+                        css_class='large-8')
                     ),
                 ),
                 TabItem('Network',
@@ -95,7 +217,7 @@ class RequirementsForm(forms.ModelForm):
                         Column(
                             InlineSwitchField('create_network_request'),
                             'network_type',
-                        css_class='large-4')
+                        css_class='large-6')
                     ),
                     Row(
                         Column(
@@ -105,7 +227,7 @@ class RequirementsForm(forms.ModelForm):
                     Row(
                         Column(
                             'wired_drops_location',
-                        css_class='large-4')
+                        css_class='large-6')
                     ),
                     Row(
                         Column(
@@ -115,7 +237,7 @@ class RequirementsForm(forms.ModelForm):
                     Row(
                         Column(
                             'other_net_requirements',
-                        css_class='large-6'),
+                        css_class='large-8'),
                     ),
                 ),
 
@@ -129,7 +251,7 @@ class RequirementsForm(forms.ModelForm):
                     Row(
                         Column(
                             InlineSwitchField('create_laptop_request'),
-                        css_class='large-4')
+                        css_class='large-6')
                     ),
                     Row(
                         Column(
@@ -151,7 +273,7 @@ class RequirementsForm(forms.ModelForm):
                     Row(
                         Column(
                             'other_laptop_requirements',
-                        css_class='large-6'),
+                        css_class='large-8'),
                     ),
                 ),
                 TabItem('Electrical',
@@ -164,7 +286,7 @@ class RequirementsForm(forms.ModelForm):
                     Row(
                         Column(
                             InlineSwitchField('create_power_request'),
-                        css_class='large-4')
+                        css_class='large-7')
                     ),
                     Row(
                         Column(
@@ -176,7 +298,7 @@ class RequirementsForm(forms.ModelForm):
                     Row(
                         Column(
                             'other_power_requirements',
-                        css_class='large-6')
+                        css_class='large-8')
                     )
                 ),
                 TabItem('Misc. Requests',
@@ -189,7 +311,7 @@ class RequirementsForm(forms.ModelForm):
                     Row(
                         Column(
                             InlineSwitchField('create_phone_request'),
-                        css_class='large-4')
+                        css_class='large-6')
                     ),
                     Row(
                         Column(
@@ -199,12 +321,12 @@ class RequirementsForm(forms.ModelForm):
                     Row(
                         Column(
                             'phone_location',
-                        css_class='large-4')
+                        css_class='large-6')
                     ),
                     Row(
                         Column(
                             'other_phone_requirements',
-                        css_class='large-6')
+                        css_class='large-8')
                     ),
                     Row(
                         Column(
@@ -215,7 +337,7 @@ class RequirementsForm(forms.ModelForm):
                     Row(
                         Column(
                             InlineSwitchField('create_radio_request'),
-                        css_class='large-4')
+                        css_class='large-6')
                     ),
                     Row(
                         Column(
@@ -226,7 +348,7 @@ class RequirementsForm(forms.ModelForm):
                     Row(
                         Column(
                             'other_radio_requirements',
-                        css_class='large-6')
+                        css_class='large-8')
                     ),
                     Row(
                         Column(
@@ -237,7 +359,7 @@ class RequirementsForm(forms.ModelForm):
                     Row(
                         Column(
                             InlineSwitchField('create_tape_request'),
-                        css_class='large-4')
+                        css_class='large-6')
                     ),
                     Row(
                         Column(
@@ -247,7 +369,7 @@ class RequirementsForm(forms.ModelForm):
                     Row(
                         Column(
                             'other_tape_requirements',
-                        css_class='large-6'),
+                        css_class='large-8'),
                     ),
                     Row(
                         Column(
@@ -258,7 +380,7 @@ class RequirementsForm(forms.ModelForm):
                     Row(
                         Column(
                             'other_request',
-                        css_class='large-6')
+                        css_class='large-8')
                     )
                 ),
                 TabItem('Feedback',
@@ -270,9 +392,12 @@ class RequirementsForm(forms.ModelForm):
                     ),
                     Row(
                         Column(
-                            'feedback_rating',
+                            Fieldset(
+                                'I think this form:',
+                                'feedback_rating'
+                            ),
                             'feedback_comments',
-                        css_class='large-6')
+                        css_class='large-8')
                     ),
                 )
             ),

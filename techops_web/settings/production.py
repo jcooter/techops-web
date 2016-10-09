@@ -36,4 +36,4 @@ LOGGING = {
     },
 }
 
-STATIC_ROOT = 'static'
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static', 'techops-web')

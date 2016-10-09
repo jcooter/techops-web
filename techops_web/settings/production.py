@@ -17,4 +17,4 @@ DATABASES = {
     }
 }
 
-STATIC_ROOT = '~/static'
+STATIC_ROOT = 'static'

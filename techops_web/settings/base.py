@@ -36,10 +36,13 @@ DEFAULT_APPS = (
 THIRD_PARTY_APPS = (
     'sitetree',
     'foundation',
+    'crispy_forms',
+    'crispy_forms_foundation',
 )
 
 LOCAL_APPS = (
     'dashboard',
+    'requirements',
 )
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -92,3 +95,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [ os.path.join(BASE_DIR, "static"), ]
 
+CRISPY_ALLOWED_TEMPLATE_PACKS = ('bootstrap', 'uni_form', 'bootstrap3', 'foundation-5')
+
+CRISPY_TEMPLATE_PACK = 'foundation-5'

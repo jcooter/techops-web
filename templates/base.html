@@ -114,12 +114,15 @@
     <!-- main javascript library -->
     {# Override if you need another version of jQuery #}
     {% block foundation_jquery %}
-    <script src="{% static "js/jquery.js" %}"></script>
+    <script src="{% static "foundation/js/vendor/jquery.min.js" %}"></script>
     {% endblock foundation_jquery %}
 
     {# Foundation JS #}
     {% block foundation_js %}
     <script src="{% static "foundation/js/foundation.min.js" %}"></script>
+    <script src="{% static "foundation/js/foundation/foundation.tabs.js" %}"></script>
+    <script src="{% static "foundation/js/foundation/foundation.util.keyboard.js" %}"></script>
+    <script src="{% static "foundation/js/foundation/foundation.util.timerAndImageLoader.js" %}"></script>
     {% endblock foundation_js %}
 
     {# Template JS #}

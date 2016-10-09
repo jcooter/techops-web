@@ -1,10 +1,12 @@
 cffi==1.8.3
+crispy-forms-foundation==0.5.4
 cryptography==1.5.2
 decorator==4.0.10
 Django==1.10.2
+django-crispy-forms==1.6.0
 django-debug-toolbar==1.6
 django-sitetree==1.6.0
-django-zurb-foundation-rtl==6.0.6.3
+django-zurb-foundation==5.5.0
 djangosaml2==0.14.5
 ecdsa==0.13
 enum34==1.1.6

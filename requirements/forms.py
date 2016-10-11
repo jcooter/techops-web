@@ -1,6 +1,9 @@
+from pprint import pprint
+
+import datetime
 from django import forms
 from django.forms import RadioSelect
-from django.forms.widgets import RadioFieldRenderer, Select
+from django.forms.widgets import RadioFieldRenderer, Select, HiddenInput
 from django.utils.encoding import force_text
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
@@ -13,20 +16,12 @@ from crispy_forms_foundation.layout import TabHolder, TabItem, Row, Column, Swit
 from rpctools.jsonrpc import ServerProxy
 
 from .models import RequirementsSubmission
+from uber.models import Event
 
 YES_NO_CHOICE = (
     ( True, _('Yes')),
     ( False, _('No'))
 )
-
-uber = ServerProxy(
-    uri=settings.UBER_API_URI,
-#    cert_file=your_client_cert_crt,
-#    key_file=your_client_cert_key
-)
-
-DEPARTMENT_CHOICE = uber.dept.list().items()
-
 
 class FieldsetRadioFieldRenderer(RadioFieldRenderer):
     outer_html = '{content}'
@@ -70,13 +65,26 @@ class RequirementsForm(forms.ModelForm):
     class Meta:
         model = RequirementsSubmission
         exclude = []
+
+        if settings.DEBUG:
+            events = Event.objects.filter(epoch__gt=datetime.datetime.now())
+        else:
+            events = Event.objects.filter(epoch__gt=datetime.datetime.now()).filter(type='prod')
+
+        if len(events) == 1:
+            uber = ServerProxy(
+                uri=events[0].api_url,
+                cert_file=events[0].ssl_client_cert.name,
+                key_file=events[0].ssl_client_key.name
+            )
+            DEPARTMENT_HEAD_CHOICE = uber.dept.list().items()
         widgets = {
             'need_custom_software': RadioSelect(
                 choices=YES_NO_CHOICE,
                 renderer=InlineRadioFieldRenderer),
             'feedback_rating': RadioSelect(renderer=FieldsetRadioFieldRenderer),
             'network_type': RadioSelect(renderer=InlineRadioFieldRenderer),
-            'department': Select(choices=DEPARTMENT_CHOICE)
+            'department': Select(choices=DEPARTMENT_HEAD_CHOICE)
         }
         labels = {
             'create_av_request': _('Our department needs A/V Equipment'),
@@ -151,6 +159,11 @@ class RequirementsForm(forms.ModelForm):
         self.helper.form_method = 'post'
         self.helper.form_action = 'submit_requirements'
         self.helper.add_input(Submit('submit', 'Submit'))
+        self.fields['event'].empty_label=None
+        if len(self.fields['event'].choices) == 1:
+            for choice in self.fields['event'].choices:
+                self.fields['event'].disabled=True
+                self.fields['event'].initial=choice[0]
         self.fields['feedback_rating'].choices = self.fields['feedback_rating'].choices[1:]
         self.fields['network_type'].choices = self.fields['network_type'].choices[1:]
         self.helper.layout = Layout(
@@ -158,6 +171,9 @@ class RequirementsForm(forms.ModelForm):
                 TabItem('General Info',
                     Row(
                         Column(
+                            Row(
+                                Column('event', css_class='large-12'),
+                            ),
                             Row(
                                 Column('department', css_class='large-12'),
                             ),

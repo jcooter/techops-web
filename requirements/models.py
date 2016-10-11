@@ -1,4 +1,8 @@
+import datetime
 from django.db import models
+from django.conf import settings
+
+from uber.models import Event
 
 FEEDBACK_CHOICE = (
     ('very_poor', 'really sucks'),
@@ -13,9 +17,20 @@ NETWORK_TYPE_CHOICE = (
     ('wired', 'Wired (Ethernet)'),
     ('both', 'Both')
 )
+
+def get_active_events():
+    if settings.DEBUG:
+        return {'epoch__gt': datetime.datetime.now()}
+    else:
+        return {
+            'epoch__gt': datetime.datetime.now(),
+            'type': 'prod'
+        }
+
 # Create your models here.
 class RequirementsSubmission(models.Model):
     # Contact Info
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True, limit_choices_to=get_active_events)
     department = models.CharField(max_length=32, verbose_name='Department')
     specific_department = models.CharField(max_length=32, blank=True, verbose_name='Specific Department')
     first_name = models.CharField(max_length=32, verbose_name='First Name')

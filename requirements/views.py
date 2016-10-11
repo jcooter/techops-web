@@ -1,5 +1,7 @@
 from pprint import pprint
 
+import datetime
+from django.conf import settings
 from django.shortcuts import render
 from django import forms
 from django.views.generic import FormView
@@ -17,6 +19,18 @@ def index(request):
             return render(request, 'thanks.html')
     else:
         form = RequirementsForm()
+        if not settings.DEBUG:
+            events = Event.objects.filter(epoch__gt=datetime.datetime.now())
+        else:
+            events = Event.objects.filter(epoch__gt=datetime.datetime.now()).filter(type='prod')
+
+        if events:
+            uber = ServerProxy(
+                uri=events[0].api_url,
+                cert_file=events[0].ssl_client_cert.name,
+                key_file=events[0].ssl_client_key.name
+            )
+            form.fields['department'].choices = uber.dept.list().items()
     return render(request, 'form.html', {'form': form})
 
 def event(request, slug):

@@ -81,13 +81,13 @@ class RequirementsForm(forms.ModelForm):
         else:
             events = Event.objects.filter(epoch__gt=datetime.datetime.now()).filter(type='prod')
 
-#        if events:
-#            uber = ServerProxy(
-#                uri=events[0].api_url,
-#                cert_file=events[0].ssl_client_cert.name,
-#                key_file=events[0].ssl_client_key.name
-#            )
-#            _DEPARTMENT_CHOICE = uber.dept.list().items()
+        if events:
+            uber = ServerProxy(
+                uri=events[0].api_url,
+                cert_file=events[0].ssl_client_cert.name,
+                key_file=events[0].ssl_client_key.name
+            )
+            _DEPARTMENT_CHOICE = uber.dept.list().items()
 
         widgets = {
             'need_custom_software': RadioSelect(

@@ -19,7 +19,7 @@ NETWORK_TYPE_CHOICE = (
 )
 
 def get_active_events():
-    if settings.DEBUG:
+    if not settings.DEBUG:
         return {'epoch__gt': datetime.datetime.now()}
     else:
         return {

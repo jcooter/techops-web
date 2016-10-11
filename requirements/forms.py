@@ -66,25 +66,36 @@ class RequirementsForm(forms.ModelForm):
         model = RequirementsSubmission
         exclude = []
 
-        if settings.DEBUG:
+        _DEPARTMENT_CHOICE = []
+
+        @property
+        def DEPARTMENT_CHOICE(self):
+            return self._DEPARTMENT_CHOICE
+
+        @DEPARTMENT_CHOICE.setter
+        def DEPARTMENT_CHOICE(self, value):
+            self._DEPARTMENT_CHOICE = value
+
+        if not settings.DEBUG:
             events = Event.objects.filter(epoch__gt=datetime.datetime.now())
         else:
             events = Event.objects.filter(epoch__gt=datetime.datetime.now()).filter(type='prod')
 
-        if len(events) == 1:
+        if events:
             uber = ServerProxy(
                 uri=events[0].api_url,
                 cert_file=events[0].ssl_client_cert.name,
                 key_file=events[0].ssl_client_key.name
             )
-            DEPARTMENT_HEAD_CHOICE = uber.dept.list().items()
+            _DEPARTMENT_CHOICE = uber.dept.list().items()
+
         widgets = {
             'need_custom_software': RadioSelect(
                 choices=YES_NO_CHOICE,
                 renderer=InlineRadioFieldRenderer),
             'feedback_rating': RadioSelect(renderer=FieldsetRadioFieldRenderer),
             'network_type': RadioSelect(renderer=InlineRadioFieldRenderer),
-            'department': Select(choices=DEPARTMENT_HEAD_CHOICE)
+            'department': Select(choices=_DEPARTMENT_CHOICE)
         }
         labels = {
             'create_av_request': _('Our department needs A/V Equipment'),
@@ -157,7 +168,7 @@ class RequirementsForm(forms.ModelForm):
         self.helper.form_id = 'id-requirementsForm'
         self.helper.form_class = 'requirementsForm'
         self.helper.form_method = 'post'
-        self.helper.form_action = 'submit_requirements'
+        #self.helper.form_action = 'submit_requirements'
         self.helper.add_input(Submit('submit', 'Submit'))
         self.fields['event'].empty_label=None
         if len(self.fields['event'].choices) == 1:

@@ -20,7 +20,7 @@ def get_ssl_directory(instance, filename):
 
 
 class Event(models.Model):
-    slug = models.SlugField(max_length=24, verbose_name='Short Name', blank=False, unique=True)
+    slug = models.SlugField(max_length=24, verbose_name='Short Name', blank=False, unique=True, primary_key=True)
     api_url = models.URLField(verbose_name='Uber API Url', blank=False)
     ssl_client_key = models.FileField(upload_to=get_ssl_directory, blank=False)
     ssl_client_cert = models.FileField(upload_to=get_ssl_directory, blank=False)

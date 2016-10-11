@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a064096f-579b-4bc4-88db-212838912e4e" name="Default" comment="Undoing stupidity">
+    <list default="true" id="a064096f-579b-4bc4-88db-212838912e4e" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/requirements/forms.py" afterPath="$PROJECT_DIR$/requirements/forms.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/requirements/views.py" afterPath="$PROJECT_DIR$/requirements/views.py" />
     </list>
     <ignored path="techops-web.iws" />
@@ -52,8 +51,8 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/requirements/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="377">
-              <caret line="31" column="13" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
+            <state relative-caret-position="120">
+              <caret line="32" column="101" selection-start-line="32" selection-start-column="101" selection-end-line="32" selection-end-column="101" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -88,8 +87,8 @@
       <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/requirements/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="33" column="89" selection-start-line="33" selection-start-column="89" selection-end-line="33" selection-end-column="89" />
+            <state relative-caret-position="152">
+              <caret line="27" column="9" selection-start-line="27" selection-start-column="9" selection-end-line="27" selection-end-column="9" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -175,9 +174,9 @@
         <option value="$PROJECT_DIR$/techops_web/urls.py" />
         <option value="$PROJECT_DIR$/techops_web/settings/base.py" />
         <option value="$PROJECT_DIR$/techops_web/settings/local.py" />
-        <option value="$PROJECT_DIR$/requirements/models.py" />
         <option value="$PROJECT_DIR$/requirements/admin.py" />
         <option value="$PROJECT_DIR$/requirements/forms.py" />
+        <option value="$PROJECT_DIR$/requirements/models.py" />
         <option value="$PROJECT_DIR$/requirements/views.py" />
       </list>
     </option>
@@ -825,7 +824,21 @@
       <option name="project" value="LOCAL" />
       <updated>1476203300584</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Moving logic out of form into view">
+      <created>1476204040822</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1476204040822</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Undoing dumb testing stuff">
+      <created>1476204652651</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1476204652651</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -898,7 +911,9 @@
     <MESSAGE value="Adding new model migrations" />
     <MESSAGE value="Undoing stupidity" />
     <MESSAGE value="Adding timestamp field to RequirementsSubmission" />
-    <option name="LAST_COMMIT_MESSAGE" value="Adding timestamp field to RequirementsSubmission" />
+    <MESSAGE value="Moving logic out of form into view" />
+    <MESSAGE value="Undoing dumb testing stuff" />
+    <option name="LAST_COMMIT_MESSAGE" value="Undoing dumb testing stuff" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1154,29 +1169,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/techops_web/settings/production.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="19" selection-start-line="6" selection-start-column="19" selection-end-line="6" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/uber/models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
           <caret line="22" column="112" selection-start-line="22" selection-start-column="112" selection-end-line="22" selection-end-column="112" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/requirements/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="33" column="89" selection-start-line="33" selection-start-column="89" selection-end-line="33" selection-end-column="89" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1206,10 +1203,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/techops_web/settings/production.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="19" selection-start-line="6" selection-start-column="19" selection-end-line="6" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/requirements/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="27" column="9" selection-start-line="27" selection-start-column="9" selection-end-line="27" selection-end-column="9" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/requirements/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="377">
-          <caret line="31" column="13" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
+        <state relative-caret-position="120">
+          <caret line="32" column="101" selection-start-line="32" selection-start-column="101" selection-end-line="32" selection-end-column="101" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>

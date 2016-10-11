@@ -30,7 +30,7 @@ def index(request):
                 cert_file=events[0].ssl_client_cert.name,
                 key_file=events[0].ssl_client_key.name
             )
-            form.fields['department'].choices = uber.dept.list().items()
+            form.fields['department'].widget = forms.widgets.Select(choices=uber.dept.list().items())
     return render(request, 'form.html', {'form': form})
 
 def event(request, slug):

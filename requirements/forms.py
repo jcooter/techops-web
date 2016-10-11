@@ -1,13 +1,16 @@
 from django import forms
 from django.forms import RadioSelect
-from django.forms.widgets import RadioFieldRenderer
+from django.forms.widgets import RadioFieldRenderer, Select
 from django.utils.encoding import force_text
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
+
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, HTML, Fieldset
 from crispy_forms_foundation.layout import TabHolder, TabItem, Row, Column, SwitchField, InlineSwitchField
+from rpctools.jsonrpc import ServerProxy
 
 from .models import RequirementsSubmission
 
@@ -15,6 +18,15 @@ YES_NO_CHOICE = (
     ( True, _('Yes')),
     ( False, _('No'))
 )
+
+uber = ServerProxy(
+    uri=settings.UBER_API_URI,
+#    cert_file=your_client_cert_crt,
+#    key_file=your_client_cert_key
+)
+
+DEPARTMENT_CHOICE = uber.dept.list().items()
+
 
 class FieldsetRadioFieldRenderer(RadioFieldRenderer):
     outer_html = '{content}'
@@ -63,7 +75,8 @@ class RequirementsForm(forms.ModelForm):
                 choices=YES_NO_CHOICE,
                 renderer=InlineRadioFieldRenderer),
             'feedback_rating': RadioSelect(renderer=FieldsetRadioFieldRenderer),
-            'network_type': RadioSelect(renderer=InlineRadioFieldRenderer)
+            'network_type': RadioSelect(renderer=InlineRadioFieldRenderer),
+            'department': Select(choices=DEPARTMENT_CHOICE)
         }
         labels = {
             'create_av_request': _('Our department needs A/V Equipment'),

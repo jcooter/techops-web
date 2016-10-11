@@ -39,7 +39,7 @@ class Event(models.Model):
     post_con = models.BooleanField(blank=True)
 
     def __unicode__(self):
-        if self.type is 'prod':
+        if self.type == 'prod':
             return '{} {}'.format(self.name, self.year)
         else:
             return '{} {} ({})'.format(self.name, self.year, self.slug)

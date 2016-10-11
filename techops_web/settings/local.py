@@ -11,7 +11,9 @@ DATABASES = {
     }
 }
 
-INSTALLED_APPS += ("debug_toolbar", )
+INSTALLED_APPS += ("debug_toolbar", 'uber')
 
 MIDDLEWARE_CLASSES += ("debug_toolbar.middleware.DebugToolbarMiddleware", )
+
+UBER_API_URI = 'https://uber.joecooter.com:4444/jsonrpc/'
 

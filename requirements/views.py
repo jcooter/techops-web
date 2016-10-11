@@ -19,7 +19,7 @@ def index(request):
             return render(request, 'thanks.html')
     else:
         form = RequirementsForm()
-        if not settings.DEBUG:
+        if settings.DEBUG:
             events = Event.objects.filter(epoch__gt=datetime.datetime.now())
         else:
             events = Event.objects.filter(epoch__gt=datetime.datetime.now()).filter(type='prod')

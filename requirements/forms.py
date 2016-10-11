@@ -1,15 +1,22 @@
+from pprint import pprint
+
+import datetime
 from django import forms
 from django.forms import RadioSelect
-from django.forms.widgets import RadioFieldRenderer
+from django.forms.widgets import RadioFieldRenderer, Select, HiddenInput
 from django.utils.encoding import force_text
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
+
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, HTML, Fieldset
 from crispy_forms_foundation.layout import TabHolder, TabItem, Row, Column, SwitchField, InlineSwitchField
+from rpctools.jsonrpc import ServerProxy
 
 from .models import RequirementsSubmission
+from uber.models import Event
 
 YES_NO_CHOICE = (
     ( True, _('Yes')),
@@ -58,12 +65,37 @@ class RequirementsForm(forms.ModelForm):
     class Meta:
         model = RequirementsSubmission
         exclude = []
+
+        _DEPARTMENT_CHOICE = []
+
+        @property
+        def DEPARTMENT_CHOICE(self):
+            return self._DEPARTMENT_CHOICE
+
+        @DEPARTMENT_CHOICE.setter
+        def DEPARTMENT_CHOICE(self, value):
+            self._DEPARTMENT_CHOICE = value
+
+        if not settings.DEBUG:
+            events = Event.objects.filter(epoch__gt=datetime.datetime.now())
+        else:
+            events = Event.objects.filter(epoch__gt=datetime.datetime.now()).filter(type='prod')
+
+        if events:
+            uber = ServerProxy(
+                uri=events[0].api_url,
+                cert_file=events[0].ssl_client_cert.name,
+                key_file=events[0].ssl_client_key.name
+            )
+            _DEPARTMENT_CHOICE = uber.dept.list().items()
+
         widgets = {
             'need_custom_software': RadioSelect(
                 choices=YES_NO_CHOICE,
                 renderer=InlineRadioFieldRenderer),
             'feedback_rating': RadioSelect(renderer=FieldsetRadioFieldRenderer),
-            'network_type': RadioSelect(renderer=InlineRadioFieldRenderer)
+            'network_type': RadioSelect(renderer=InlineRadioFieldRenderer),
+            'department': Select(choices=_DEPARTMENT_CHOICE)
         }
         labels = {
             'create_av_request': _('Our department needs A/V Equipment'),
@@ -136,8 +168,13 @@ class RequirementsForm(forms.ModelForm):
         self.helper.form_id = 'id-requirementsForm'
         self.helper.form_class = 'requirementsForm'
         self.helper.form_method = 'post'
-        self.helper.form_action = 'submit_requirements'
+        #self.helper.form_action = 'submit_requirements'
         self.helper.add_input(Submit('submit', 'Submit'))
+        self.fields['event'].empty_label=None
+        if len(self.fields['event'].choices) == 1:
+            for choice in self.fields['event'].choices:
+                self.fields['event'].disabled=True
+                self.fields['event'].initial=choice[0]
         self.fields['feedback_rating'].choices = self.fields['feedback_rating'].choices[1:]
         self.fields['network_type'].choices = self.fields['network_type'].choices[1:]
         self.helper.layout = Layout(
@@ -145,6 +182,9 @@ class RequirementsForm(forms.ModelForm):
                 TabItem('General Info',
                     Row(
                         Column(
+                            Row(
+                                Column('event', css_class='large-12'),
+                            ),
                             Row(
                                 Column('department', css_class='large-12'),
                             ),

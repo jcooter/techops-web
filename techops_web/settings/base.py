@@ -99,3 +99,5 @@ STATICFILES_DIRS = [ os.path.join(BASE_DIR, "static"), ]
 CRISPY_ALLOWED_TEMPLATE_PACKS = ('bootstrap', 'uni_form', 'bootstrap3', 'foundation-5')
 
 CRISPY_TEMPLATE_PACK = 'foundation-5'
+
+FILE_UPLOAD_MAX_MEMORY_SIZE = 1024

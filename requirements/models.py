@@ -31,6 +31,7 @@ def get_active_events():
 class RequirementsSubmission(models.Model):
     # Contact Info
     event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True, limit_choices_to=get_active_events)
+    timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Request Submitted")
     department = models.CharField(max_length=32, verbose_name='Department')
     specific_department = models.CharField(max_length=32, blank=True, verbose_name='Specific Department')
     first_name = models.CharField(max_length=32, verbose_name='First Name')

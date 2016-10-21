@@ -5,10 +5,18 @@ from django.conf import settings
 from django.shortcuts import render
 from django import forms
 from django.views.generic import FormView
+from formtools.wizard.views import SessionWizardView
 from rpctools.jsonrpc import ServerProxy
 
 from .forms import RequirementsForm
 from uber.models import Event
+
+class RequirementsWizard(SessionWizardView):
+    def get_template_names(self):
+        return 'form.html'
+
+    def done(self, form_list, **kwargs):
+        return render(request, 'thanks.html')
 
 def index(request):
     if request.method == 'POST':

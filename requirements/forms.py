@@ -60,6 +60,201 @@ class InlineRadioFieldRenderer(RadioFieldRenderer):
             id_attr=format_html(' id="{}"', id_) if id_ else '',
             content=mark_safe('\n'.join(output)),
         )
+class NewRequirementsForm1(forms.ModelForm):
+    class Meta:
+        _DEPARTMENT_CHOICE = []
+
+        @property
+        def DEPARTMENT_CHOICE(self):
+            return self._DEPARTMENT_CHOICE
+
+        @DEPARTMENT_CHOICE.setter
+        def DEPARTMENT_CHOICE(self, value):
+            self._DEPARTMENT_CHOICE = value
+
+        model = RequirementsSubmission
+        fields = [
+            'event',
+            'department',
+            'specific_department',
+            'first_name',
+            'last_name',
+            'contact_email',
+            'create_av_request',
+            'create_network_request',
+            'create_laptop_request',
+            'create_power_request',
+            'create_phone_request',
+            'create_radio_request',
+            'create_tape_request'
+        ]
+        labels = {
+            'create_av_request': _('Our department needs A/V Equipment'),
+            'create_network_request': _('Our department needs Network access'),
+            'create_laptop_request': _('Our department needs laptops'),
+            'create_power_request': _('Our department needs extension cords, power strips, etc.'),
+            'create_phone_request': _('Our department needs IP Phones'),
+            'create_radio_request': _('Our department needs radios'),
+            'create_tape_request': _('Our department needs gaff tape'),
+        }
+        widgets = {
+            'department': Select(choices=_DEPARTMENT_CHOICE)
+        }
+
+class AVRequirementsForm(forms.ModelForm):
+    class Meta:
+        model = RequirementsSubmission
+        fields = [
+            'need_pa',
+            'need_wired_mic',
+            'need_wireless_mic',
+            'need_laptop_input',
+            'need_other_audio',
+            'need_projector',
+            'need_projection_screen',
+            'need_lcd_monitor',
+            'need_tv',
+            'need_dvd_player',
+            'need_other_video',
+            'av_details',
+            'need_lighting',
+            'lighting_details'
+        ]
+        labels = {
+            'need_pa': _('PA Systems / Speakers'),
+            'need_wired_mic': _('Wired Microphones'),
+            'need_wireless_mic': _('Wireless Microphones'),
+            'need_laptop_input': _('Laptop / Phone Inputs'),
+            'need_other_audio': _('Other'),
+
+            'need_projector': _('Projectors'),
+            'need_projection_screen': _('Projection Screens'),
+            'need_lcd_monitor': _('LCD Computer Monitors'),
+            'need_tv': _('Televisions'),
+            'need_dvd_player': _('DVD/Blu-ray Players'),
+            'need_other_video': _('Other'),
+
+            'av_details': _('Details'),
+
+            'need_lighting': _('Our department needs Lighting Equipment'),
+            'lighting_details': _('Details'),
+        }
+
+class NetworkRequirementsForm(forms.ModelForm):
+    class Meta:
+        model = RequirementsSubmission
+        fields = [
+            'network_type',
+            'num_wired_drops',
+            'wired_drops_location',
+            'num_wireless_users',
+            'other_net_requirements',
+        ]
+        labels = {
+            'network_type': _('What type of network connection do you need?'),
+            'num_wired_drops': _('Approximately how many wired drops do you need?'),
+            'wired_drops_location': _('What room(s) do you need wired drops in?'),
+            'num_wireless_users': _('Approximately how many users will need wireless access?'),
+            'other_net_requirements': _('Other requirements?'),
+        }
+        widgets = {
+            'network_type': RadioSelect(renderer=InlineRadioFieldRenderer),
+        }
+
+class LaptopRequirementsForm(forms.ModelForm):
+    class Meta:
+        model = RequirementsSubmission
+        fields = [
+            'num_laptops',
+            'need_internet_access',
+            'need_uber_access',
+            'need_digital_signage',
+            'need_other_laptops',
+            'need_custom_software',
+            'other_laptop_requirements'
+        ]
+        labels = {
+            'num_laptops': _('How many laptops do you need?'),
+
+            'need_internet_access': _('Access the Internet'),
+            'need_uber_access': _('Access Uber/RAMS'),
+            'need_digital_signage': _('Run digital signage'),
+            'need_other_laptops': _('Other'),
+
+            'need_custom_software': _('I need to install software on our laptops'),
+            'other_laptop_requirements': _('Other requirements?'),
+        }
+        widgets = {
+            'need_custom_software': RadioSelect(
+                choices=YES_NO_CHOICE,
+                renderer=InlineRadioFieldRenderer),
+        }
+
+class PowerRequirementsForm(forms.ModelForm):
+    fields = [
+        'num_power_strips',
+        'num_25ft_cords',
+        'num_50ft_cords',
+        'other_power_requirements'
+    ]
+    labels = {
+        'num_power_strips': _('How many power strips do you need?'),
+        'num_25ft_cords': _('How many 25 foot extension cords do you need?'),
+        'num_50ft_cords': _('How many 50 foot extension cords do you need?'),
+        'other_power_requirements': _('Other requirements?'),
+    }
+
+class PhoneRequirementsForm(forms.ModelForm):
+    fields = [
+        'num_phones',
+        'phone_location',
+        'other_phone_requirements'
+    ]
+    labels = {
+        'num_phones': _('How many phones?'),
+        'phone_location': _('Which room(s) do you need these phones?'),
+        'other_phone_requirements': _('Special Requirements?'),
+    }
+
+class RadioRequirementsForm(forms.ModelForm):
+    fields = [
+        'num_radios',
+        'num_headsets',
+        'other_radio_requirements'
+    ]
+    labels = {
+        'num_radios': _('How many radios?'),
+        'num_headsets': _('How many headsets?'),
+        'other_radio_requirements': _('Special Requirements?'),
+    }
+
+class TapeRequirementsForm(forms.ModelForm):
+    fields = [
+        'num_rolls',
+        'other_tape_requirements'
+    ]
+    labels = {
+        'num_rolls': _('How many rolls?'),
+        'other_tape_requirements': _('Special Requirements'),
+    }
+
+
+class FeedbackRequirementsForm(forms.ModelForm):
+    fields = [
+        'other_request',
+        'feedback_rating',
+        'feedback_comments',
+    ]
+    labels = {
+        'other_request': _(''),
+
+        'feedback_rating': _(''),
+        'feedback_comments': _('Comments / Suggestions')
+    }
+    widgets = {
+        'feedback_rating': RadioSelect(renderer=FieldsetRadioFieldRenderer),
+    }
+
 
 class RequirementsForm(forms.ModelForm):
     class Meta:

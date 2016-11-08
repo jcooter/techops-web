@@ -6,17 +6,6 @@ from . import views
 from . import forms
 
 urlpatterns = [
-    url(r'^thisurl$', views.RequirementsWizard.as_view([
-        forms.NewRequirementsForm1,
-        forms.AVRequirementsForm,
-        forms.NetworkRequirementsForm,
-        forms.LaptopRequirementsForm,
-        forms.PowerRequirementsForm,
-        forms.PhoneRequirementsForm,
-        forms.RadioRequirementsForm,
-        forms.TapeRequirementsForm,
-        forms.FeedbackRequirementsForm,
-    ])),
     url(r'^$', views.index),
     url(r'^(?P<slug>[-\w]+)', views.event)
 ]

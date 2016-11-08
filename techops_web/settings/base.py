@@ -35,9 +35,8 @@ DEFAULT_APPS = (
 
 THIRD_PARTY_APPS = (
     'sitetree',
-    'foundation',
     'crispy_forms',
-    'crispy_forms_foundation',
+    'crispy_forms_materialize',
 )
 
 LOCAL_APPS = (
@@ -96,8 +95,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [ os.path.join(BASE_DIR, "static"), ]
 
-CRISPY_ALLOWED_TEMPLATE_PACKS = ('bootstrap', 'uni_form', 'bootstrap3', 'foundation-5')
+CRISPY_ALLOWED_TEMPLATE_PACKS = ('bootstrap', 'uni_form', 'bootstrap3', 'materialize_css_forms')
 
-CRISPY_TEMPLATE_PACK = 'foundation-5'
+CRISPY_TEMPLATE_PACK = 'materialize_css_forms'
 
 FILE_UPLOAD_MAX_MEMORY_SIZE = 1024
